@@ -1,0 +1,126 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Example Student's HCDE 439 Physical Computing Page!</title> 
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head> 
+    <body> 
+
+        <div class="header">
+            <h1>Chris' Assignment 2!</h1>
+            <p>
+                Here is all the documentation for assignment 2!
+            </p>    
+        </div>
+        <div>
+            <a href="../index.html">
+                <h4>Back to Home Page</h4>
+            </a>
+        </div>
+        <br/>
+        <div class="header">
+            <h3>Circuits</h3>
+            <img src="circuit.jpg" width=400> 
+            <br/>
+            <img src="circuit.gif" width=400>
+            <br/>    
+        </div>
+        <br/>
+        <br/>
+        <div>
+            <h3>Schematic & Calculations</h3>
+            <br/>  
+            <img src="schematic.jpg" width=400>
+            <img src="arduino.jpg" width=400>
+            <br/>
+            <img src="calculation.jpg" width=400>
+            <p>
+            The maximum current can flow in the circuit is 20mA and the votalge from the power and pins output is high is 5V. The voltage drop <br/>for 
+            green LED is 1.8V and 3.3V for blue and white LEDs. So the voltage left for green LED is 3.2V and 1.7V for blue and white LEDs. <br/>With the 
+            maxium current, the reistor needed for the circuit is calcultated as 160Ω and 85Ω respectively. I used the 220Ω resistor for the <br/>last assignemnt. 
+            So I used the same for this assignment as well. And I used a 220Ω for the button as well because if not, it's just connecting <br/>the power to the ground. 
+            </p>
+        </div>
+
+        <br/>
+        <br/>
+        <div>
+            <h3>Arduino Code</h3>
+            <pre>
+                <font color="#434f54">&#47;&#47;variables for three pins representing red, gree and blue</font>
+                <font color="#00979c">int</font> <font color="#000000">R</font> <font color="#434f54">=</font> <font color="#000000">9</font><font color="#000000">;</font>
+                <font color="#00979c">int</font> <font color="#000000">G</font> <font color="#434f54">=</font> <font color="#000000">10</font><font color="#000000">;</font>
+                <font color="#00979c">int</font> <font color="#000000">B</font> <font color="#434f54">=</font> <font color="#000000">11</font><font color="#000000">;</font>
+                <font color="#434f54">&#47;&#47; variable for reading the pushbutton status</font>
+                <font color="#00979c">int</font> <font color="#000000">buttonState</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                
+                <font color="#00979c">void</font> <font color="#5e6d03">setup</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; initialize the pushbutton pin as an input:</font>
+                 &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">8</font><font color="#434f54">,</font><font color="#00979c">INPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; initialize the LED pins as outputs:</font>
+                 &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">R</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">G</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">B</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                <font color="#000000">}</font>
+                
+                <font color="#00979c">void</font> <font color="#5e6d03">loop</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; read the state of the pushbutton value:</font>
+                 &nbsp;<font color="#000000">buttonState</font> <font color="#434f54">=</font> <font color="#d35400">digitalRead</font><font color="#000000">(</font><font color="#000000">8</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; check if the pushbutton is pressed. If it is, the buttonState is HIGH.</font>
+                 &nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">buttonState</font> <font color="#434f54">==</font> <font color="#00979c">HIGH</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; turn LEDs on with initialized color:</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">R</font><font color="#434f54">,</font> <font color="#000000">227</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">G</font><font color="#434f54">,</font> <font color="#000000">113</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">B</font><font color="#434f54">,</font> <font color="#000000">67</font><font color="#000000">)</font><font color="#000000">;</font>
+                
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; fade in from min to max in increments of 1 points on red:</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font> <font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;=</font> <font color="#000000">255</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; sets the value (range from 0 to 255):</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">R</font><font color="#434f54">,</font> <font color="#000000">i</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; wait for 10 milliseconds to see the dimming effect</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">10</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; wait for 1 second</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">1000</font><font color="#000000">)</font><font color="#000000">;</font>
+                
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; fade in from min to max in increments of 1 points on blue:</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">0</font> <font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&lt;=</font> <font color="#000000">255</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">++</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; sets the value (range from 0 to 255):</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">B</font><font color="#434f54">,</font> <font color="#000000">i</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; wait for 10 milliseconds to see the dimming effect</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">10</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; wait for 1 second</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">1000</font><font color="#000000">)</font><font color="#000000">;</font>
+                
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; fade in from max to min in increments of 1 points on green:</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#5e6d03">for</font> <font color="#000000">(</font><font color="#00979c">int</font> <font color="#000000">i</font> <font color="#434f54">=</font> <font color="#000000">255</font> <font color="#000000">;</font> <font color="#000000">i</font> <font color="#434f54">&gt;=</font> <font color="#000000">0</font><font color="#000000">;</font> <font color="#000000">i</font><font color="#434f54">--</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; sets the value (range from 0 to 255):</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">G</font><font color="#434f54">,</font> <font color="#000000">i</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; wait for 10 milliseconds to see the dimming effect</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">10</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; wait for 1 second</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">delay</font><font color="#000000">(</font><font color="#000000">1000</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;
+                 &nbsp;<font color="#000000">}</font>
+                 &nbsp;<font color="#434f54">&#47;&#47;if the buttonState is not HIGH</font>
+                 &nbsp;<font color="#5e6d03">else</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; turn LED off:</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">R</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">G</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">B</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#000000">}</font>
+                
+                <font color="#000000">}</font>
+                
+                </pre>
+        </div>
+        
+    </body>
+</html>
