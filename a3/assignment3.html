@@ -1,0 +1,143 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Example Student's HCDE 439 Physical Computing Page!</title> 
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head> 
+    <body> 
+
+        <div class="header">
+            <h1>Chris' Assignment 3!</h1>
+            <p>
+                Here is all the documentation for assignment 3!
+            </p>    
+        </div>
+        <div>
+            <a href="../index.html">
+                <h4>Back to Home Page</h4>
+            </a>
+        </div>
+        <br/>
+        <div class="header">
+            <h3>Circuits</h3>
+            <img src="circuit.jpg" width=400> 
+            <br/>
+            <img src="circuit.gif" width=400>
+            <br/>    
+        </div>
+        <br/>
+        <br/>
+        <div>
+            <h3>Schematic & Calculations</h3>
+            <br/>  
+            <img src="schematic.jpg" width=400>
+            <img src="arduino.jpg" width=400>
+            <br/>
+            <img src="calculation.jpg" width=400>
+            <p>
+            The maximum current can flow in the circuit is 20mA and the votalge when pin output is high is 5V. The voltage drop for <br/>green LED is 1.8V
+            and 3.3V for blue and white LEDs. So the voltage left for green LED is 3.2V and 1.7V for blue and <br/>white LEDs. With the maxium current, the 
+            reistor needed for the circuit is calcultated as 160Ω and 85Ω respectively. The <br/>one I chose is the 220 resistor, which is good for this 
+            circuit since higher than the calculated resistant.
+            <br/>
+            The resistor I used to connect to the photoresistor is a 100KΩ resistor. I use a big resistor to limit the current here to limit <br/>the amount of 
+            current that's going through them, also limits the range. In this case the voltage across each resistors is <br/>approximately 2.5V to 5V, which the
+            sensor value is expected to be ranged from 500 to 1023, since 5V corresponds to 1023 <br/>and 0 corresponds to 0. And I map the range from sensor 
+            value to 0-255, which is the range for the analogwirte() function, <br/>to change the LED color.
+            </p>
+        </div>
+
+        <br/>
+        <br/>
+        <div>
+            <h3>Arduino Code</h3>
+            <pre>
+                <font color="#434f54">&#47;&#47; These constants won&#39;t change:</font>
+                <font color="#00979c">const</font> <font color="#00979c">int</font> <font color="#000000">sensorPin</font> <font color="#434f54">=</font> <font color="#000000">A0</font><font color="#000000">;</font> &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; pin that the sensor is attached to</font>
+                
+                <font color="#434f54">&#47;&#47;variables for three pins that led is attached to</font>
+                <font color="#00979c">int</font> <font color="#000000">R</font> <font color="#434f54">=</font> <font color="#000000">9</font><font color="#000000">;</font>
+                <font color="#00979c">int</font> <font color="#000000">G</font> <font color="#434f54">=</font> <font color="#000000">10</font><font color="#000000">;</font>
+                <font color="#00979c">int</font> <font color="#000000">B</font> <font color="#434f54">=</font> <font color="#000000">11</font><font color="#000000">;</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                
+                <font color="#434f54">&#47;&#47;initialize the variables for sensor value, max value and min value</font>
+                <font color="#00979c">int</font> <font color="#000000">value</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font>
+                <font color="#00979c">int</font> <font color="#d35400">max</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font>
+                <font color="#00979c">int</font> <font color="#d35400">min</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font>
+                
+                <font color="#00979c">void</font> <font color="#5e6d03">setup</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; turn on the red LED to signal the start of the calibration period:</font>
+                 &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">11</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">11</font><font color="#434f54">,</font> <font color="#00979c">HIGH</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;
+                 &nbsp;<font color="#434f54">&#47;&#47; initialize the LED pins as outputs:</font>
+                 &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">R</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">G</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">B</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                
+                 &nbsp;<font color="#434f54">&#47;&#47; this while loop is directly cited from the calibration example</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; calibrate during the first five seconds</font>
+                 &nbsp;<font color="#5e6d03">while</font> <font color="#000000">(</font><font color="#d35400">millis</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#434f54">&lt;</font> <font color="#000000">5000</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#000000">sensorValue</font> <font color="#434f54">=</font> <font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">sensorPin</font><font color="#000000">)</font><font color="#000000">;</font>
+                
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; record the maximum sensor value</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">sensorValue</font> <font color="#434f54">&gt;</font> <font color="#000000">sensorMax</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">sensorMax</font> <font color="#434f54">=</font> <font color="#000000">sensorValue</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; record the minimum sensor value</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">sensorValue</font> <font color="#434f54">&lt;</font> <font color="#000000">sensorMin</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">sensorMin</font> <font color="#434f54">=</font> <font color="#000000">sensorValue</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;<font color="#000000">}</font>
+                
+                 &nbsp;<font color="#434f54">&#47;&#47; signal the end of the calibration period</font>
+                 &nbsp;<font color="#d35400">digitalWrite</font><font color="#000000">(</font><font color="#000000">11</font><font color="#434f54">,</font> <font color="#00979c">LOW</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;
+                <font color="#000000">}</font>
+                
+                <font color="#00979c">void</font> <font color="#5e6d03">loop</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; read the sensor:</font>
+                 &nbsp;<font color="#000000">sensorValue</font> <font color="#434f54">=</font> <font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">sensorPin</font><font color="#000000">)</font><font color="#000000">;</font>
+                
+                 &nbsp;<font color="#434f54">&#47;&#47; constrain the sensor value between the max and min</font>
+                 &nbsp;<font color="#000000">sensorValue</font> <font color="#434f54">=</font> <font color="#d35400">constrain</font><font color="#000000">(</font><font color="#000000">sensorValue</font><font color="#434f54">,</font> <font color="#000000">sensorMin</font><font color="#434f54">,</font> <font color="#000000">sensorMax</font><font color="#000000">)</font><font color="#000000">;</font>
+                
+                 &nbsp;<font color="#434f54">&#47;&#47; map the max and min value into 0-255 range</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">sensorValue</font> <font color="#434f54">=</font> <font color="#d35400">map</font><font color="#000000">(</font><font color="#000000">sensorValue</font><font color="#434f54">,</font> <font color="#000000">sensorMin</font><font color="#434f54">,</font> <font color="#000000">sensorMax</font><font color="#434f54">,</font> <font color="#000000">255</font><font color="#434f54">,</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+                
+                 &nbsp;<font color="#434f54">&#47;&#47; fade the RGB LED using the adjusted value:</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; if the sensor value is 0</font>
+                 &nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">sensorValue</font> <font color="#434f54">==</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; turn the LED off &nbsp;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">R</font><font color="#434f54">,</font> <font color="#000000">sensorValue</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">G</font><font color="#434f54">,</font> <font color="#000000">sensorValue</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">B</font><font color="#434f54">,</font> <font color="#000000">sensorValue</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#000000">}</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; if the sensor value is greater than the 2&#47;3 of the 255</font>
+                 &nbsp;<font color="#5e6d03">else</font> <font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">sensorValue</font> <font color="#434f54">&gt;=</font> <font color="#000000">2</font><font color="#434f54">*</font><font color="#000000">(</font><font color="#000000">255</font><font color="#000000">)</font><font color="#434f54">&#47;</font><font color="#000000">3</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; fade the red LED using the sensor value</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">R</font><font color="#434f54">,</font> <font color="#000000">sensorValue</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#000000">}</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; if the sensor value is greater than the 2&#47;3 of the 255 and less than 1&#47;3</font>
+                 &nbsp;<font color="#5e6d03">else</font> <font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">sensorValue</font> <font color="#434f54">&gt;=</font> <font color="#000000">(</font><font color="#000000">255</font><font color="#000000">)</font><font color="#434f54">&#47;</font><font color="#000000">3</font><font color="#000000">)</font><font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; fade the green LED using the sensor value</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">G</font><font color="#434f54">,</font> <font color="#000000">sensorValue</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#000000">}</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; or else if the sensor value is less than &nbsp;1&#47;3 of the 255</font>
+                 &nbsp;<font color="#5e6d03">else</font> <font color="#000000">(</font><font color="#000000">sensorValue</font> <font color="#434f54">&lt;=</font> <font color="#000000">(</font><font color="#000000">255</font><font color="#000000">)</font><font color="#434f54">&#47;</font><font color="#000000">3</font><font color="#000000">)</font><font color="#000000">;</font><font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; fade the blue LED using the sensor value</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">B</font><font color="#434f54">,</font> <font color="#000000">sensorValue</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#000000">}</font>
+                <font color="#000000">}</font>
+                </pre>
+        </div>
+         
+    </body>
+    
+</html>
