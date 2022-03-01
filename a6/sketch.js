@@ -44,10 +44,12 @@ function portClose() {
   print('The serial port closed.');
 }
 
+//initialize variable to 0
 inData = 0;
 function serialEvent() {
   if (serial.available()) {
-      inData = serial.read();
+    //read serial
+    inData = serial.read();
     var datastring = serial.readLine(); // readin some serial
     var newarray;
     try {
@@ -55,26 +57,33 @@ function serialEvent() {
       } catch(err) {
             //console.log(err);
     }
+    //if the array is good
     if (typeof(newarray) == 'object') {
+      // set the array variable
         dataarray = newarray;
     }
-    console.log("got back " + datastring);
   }
 }
 
+//initialize value to 0
 value = 0;
 function keyPressed() {
+  //if the left arrow key is pressed
 	if (keyCode === LEFT_ARROW) {
-    value = 180;
-    serial.write(value);
+    //serial write 180
+    serial.write(180);
+  //if the right arrow key is pressed
   } else if (keyCode === RIGHT_ARROW) {
-    value = 0;
-    serial.write(value);
+    //serial write 0
+    serial.write(0);
   }
 }
 
+//draw on the web page
 function draw() {
+  //set the background color
   background(255, 204, 0)
+  //draw a circle controled by the serial input
   ellipse(dataarray[0],dataarray[1],50,50)
 }
 
