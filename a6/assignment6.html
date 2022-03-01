@@ -1,0 +1,93 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Example Student's HCDE 439 Physical Computing Page!</title> 
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head> 
+    <body> 
+
+        <div class="header">
+            <h1>Chris' Assignment 6!</h1>
+            <p>
+                Here is all the documentation for assignment 6!
+            </p>    
+        </div>
+        <div>
+            <a href="../index.html">
+                <h4>Back to Home Page</h4>
+            </a>
+        </div>
+        <br/>
+        <div class="header">
+            <h3>Circuits</h3>
+            <img src="circuit.jpg" width=400> 
+            <br/>
+            <img src="circuit.gif" width=400>
+            <br/>    
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <div>
+            <h3>Schematic</h3>
+              
+            <img src="schematic1.jpg" width=400 height = 400>
+            <img src="schematic2.jpg" width=400 height = 400>
+            <br/>
+            <br/>
+            <p>
+                The Joystick controls the little ball on the screen and the arrow keys controls the servo motor's direction. The value read from
+                joystick <br/>is between 0 to 1023 in both x and y directions. The value to set the servo motor is between 0 to 180, representing different
+                directions. 
+            </p>
+        </div>
+
+        <br/>
+        <br/>
+        <div>
+            <h3>Arduino Code</h3>
+            <pre>
+                <font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><b><font color="#d35400">Servo</font></b><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
+                <b><font color="#d35400">Servo</font></b> <font color="#000000">myServo</font><font color="#000000">;</font> &nbsp;<font color="#434f54">&#47;&#47; create a servo object</font>
+                
+                <font color="#00979c">void</font> <font color="#5e6d03">setup</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">begin</font><font color="#000000">(</font><font color="#000000">9600</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#000000">myServo</font><font color="#434f54">.</font><font color="#d35400">attach</font><font color="#000000">(</font><font color="#000000">9</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47; attaches the servo on pin 9 to the servo object</font>
+                 &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">setTimeout</font><font color="#000000">(</font><font color="#000000">10</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47; set the timeout for parseInt</font>
+                
+                <font color="#000000">}</font>
+                
+                <font color="#00979c">void</font> <font color="#5e6d03">loop</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; read numbers from analog pins 1&amp;2</font>
+                 &nbsp;<font color="#00979c">int</font> <font color="#000000">s1</font> <font color="#434f54">=</font> <font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">1</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#00979c">int</font> <font color="#000000">s2</font> <font color="#434f54">=</font> <font color="#d35400">analogRead</font><font color="#000000">(</font><font color="#000000">2</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#434f54">&#47;&#47; print the numbers out to serial</font>
+                 &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;[&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">s1</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#005c5f">&#34;,&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">print</font><font color="#000000">(</font><font color="#000000">s2</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">println</font><font color="#000000">(</font><font color="#005c5f">&#34;]&#34;</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">available</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#434f54">&gt;</font> <font color="#000000">0</font><font color="#000000">)</font> <font color="#000000">{</font> &nbsp;&nbsp;<font color="#434f54">&#47;&#47; if there&#39;s serial data </font>
+                 &nbsp;&nbsp;<font color="#00979c">int</font> <font color="#000000">inByte</font> <font color="#434f54">=</font> <b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">read</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47; read it</font>
+                 &nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">write</font><font color="#000000">(</font><font color="#000000">inByte</font><font color="#000000">)</font><font color="#000000">;</font> &nbsp;&nbsp;<font color="#434f54">&#47;&#47; send it back out as raw binary data</font>
+                 &nbsp;&nbsp;<font color="#000000">myServo</font><font color="#434f54">.</font><font color="#d35400">write</font><font color="#000000">(</font><font color="#000000">inByte</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47;some angle between 0 and 180</font>
+                 &nbsp;<font color="#000000">}</font>
+                <font color="#000000">}</font>
+                
+            </pre>
+            <a href="sketch.js">
+                <h3>JavsScript Code</h3>
+            </a>
+            <br/>
+            <br/>
+            <br/>
+        </div>
+         
+    </body>
+    
+</html>
