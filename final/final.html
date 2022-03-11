@@ -1,0 +1,163 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Example Student's HCDE 439 Physical Computing Page!</title> 
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head> 
+    <body> 
+
+        <div class="header">
+            <h1>Chris' Fianl Assignment!</h1>
+            <p>
+                The final assignment is a 3-speed cooling fan controlled by a IR remote.<br/>
+                Here is all the documentation for the final assignment!
+            </p>    
+        </div>
+        <div>
+            <h3>Demonstration Video</h3>
+            <iframe width="600" height="400"
+            src="https://youtu.be/FCv4YThcGJE?controls=1">
+            </iframe>
+        </div>
+        <div>
+            <a href="../index.html">
+                <h4>Back to Home Page</h4>
+            </a>
+        </div>
+        <br/>
+        <div class="header">
+            <img src="fan.jpg" width=400 height = 500>
+            <img src="remote.jpg" height = 500>
+            <p>The cooling fan is controled by the IR remote shown on the above. To turn on/off the fan by pressing the power button.<br/>
+                Press the up button to increase the speed and the down button to decrease. The stand is made by cardboards and tapes.
+            </p>
+            <br/>
+            <img src="blade.jpg" height = 400>
+            <p>
+                Fan blades were created by 3D printing. Different types of fan blades were made to see which one can blow out the most wind.
+            </p>
+            <br/>
+            <br/>
+            <h3>Circuits</h3>
+            <img src="circuit.jpg" width=400 height = 400> 
+            <img src="inside.jpg" width=400 height = 400>
+            <p>
+                The fan blade is connected to a DC motor, which is controled by Arduino. The power source is a 9V battery.
+                The whole circuit is <br/>hidden in the hollow space inside the stand. The back of the stand can be opened for replacing batteries.      
+            </p>
+            <br/>    
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <div>
+            <h3>Schematic</h3>
+            <img src="motor.jpg" width=400 height = 400>
+            <img src="ir.jpg" width=400 height = 400>
+            <p>The fan is built with an IR remote and the receiver connected to the analog pins. Once the pins receive the signal, it will <br/>turn on 
+                the DC motor through a transistor. 
+            </p>
+            <img src="capacitor.jpg" width=400 height = 400>
+            <img src="capacitor1.jpg" width=400 height = 400>
+            <p>
+                Since there are current caused by the spinning of the motor, and the current would affect the signal receiving. 
+                A number of <br/>capacitors were put between the power and ground to stablize the receiving of IR signals. 
+            </p>
+        </div>
+
+        <br/>
+        <br/>
+        <div>
+            <h3>Arduino Code</h3>
+            <p>The logic of the code is to see whether the fan is already on. If the fan is off, it will be on if power button is pressed, and if the <br/>fan 
+                is on, it will be off if power button is pressed. If the up and down button is pressed, the code checks whether the fan is on. <br/>The speed
+                can only be changed if the fan is on.
+            </p>
+            <pre>
+                <font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><font color="#000000">Arduino</font><font color="#434f54">.</font><font color="#000000">h</font><font color="#434f54">&gt;</font>
+                <font color="#5e6d03">#define</font> <font color="#000000">DECODE_NEC</font> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; Includes Apple and Onkyo &nbsp;&nbsp;</font>
+                <font color="#5e6d03">#include</font> <font color="#434f54">&lt;</font><font color="#000000">IRremote</font><font color="#434f54">.</font><font color="#000000">hpp</font><font color="#434f54">&gt;</font> &nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; Includes the irremote library</font>
+                
+                <font color="#434f54">&#47;&#47; initialize the pins</font>
+                <font color="#00979c">int</font> <font color="#00979c">IR_RECEIVE_PIN</font> <font color="#434f54">=</font> <font color="#000000">11</font><font color="#000000">;</font>
+                <font color="#00979c">int</font> <font color="#000000">trans</font> <font color="#434f54">=</font> <font color="#000000">9</font><font color="#000000">;</font>
+                <font color="#434f54">&#47;&#47;initialize a variable for the state of the fan</font>
+                <font color="#00979c">int</font> <font color="#000000">fan</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font>
+                <font color="#434f54">&#47;&#47;initialize normal fan speed</font>
+                <font color="#00979c">int</font> <font color="#000000">fanspeed</font> <font color="#434f54">=</font> <font color="#000000">127</font><font color="#000000">;</font>
+                
+                <font color="#00979c">void</font> <font color="#5e6d03">setup</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;<b><font color="#d35400">Serial</font></b><font color="#434f54">.</font><font color="#d35400">begin</font><font color="#000000">(</font><font color="#000000">9600</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; Start the receiver and if not 9. parameter specified, </font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; take LED_BUILTIN pin from the internal boards definition as default feedback LED</font>
+                 &nbsp;&nbsp;&nbsp;<b><font color="#d35400">IrReceiver</font></b><font color="#434f54">.</font><font color="#d35400">begin</font><font color="#000000">(</font><font color="#00979c">IR_RECEIVE_PIN</font><font color="#434f54">,</font> <font color="#000000">ENABLE_LED_FEEDBACK</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; set the pin to input</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">11</font><font color="#434f54">,</font> <font color="#00979c">INPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; initialize the pins as outputs </font>
+                 &nbsp;&nbsp;&nbsp;<font color="#d35400">pinMode</font><font color="#000000">(</font><font color="#000000">9</font><font color="#434f54">,</font> <font color="#00979c">OUTPUT</font><font color="#000000">)</font><font color="#000000">;</font>
+                <font color="#000000">}</font>
+                
+                <font color="#00979c">void</font> <font color="#5e6d03">loop</font><font color="#000000">(</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;<font color="#95a5a6">&#47;*</font>
+                <font color="#95a5a6"> &nbsp;&nbsp;&nbsp;&nbsp;* Check if received data is available and if yes, try to decode it.</font>
+                <font color="#95a5a6"> &nbsp;&nbsp;&nbsp;&nbsp;* Decoded result is in the IrReceiver.decodedIRData structure.</font>
+                <font color="#95a5a6"> &nbsp;&nbsp;&nbsp;&nbsp;*</font>
+                <font color="#95a5a6"> &nbsp;&nbsp;&nbsp;&nbsp;* E.g. command is in IrReceiver.decodedIRData.command</font>
+                <font color="#95a5a6"> &nbsp;&nbsp;&nbsp;&nbsp;* address is in command is in IrReceiver.decodedIRData.address</font>
+                <font color="#95a5a6"> &nbsp;&nbsp;&nbsp;&nbsp;* and up to 32 bit raw data in IrReceiver.decodedIRData.decodedRawData</font>
+                <font color="#95a5a6"> &nbsp;&nbsp;&nbsp;&nbsp;*&#47;</font>
+                 &nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><b><font color="#d35400">IrReceiver</font></b><font color="#434f54">.</font><font color="#d35400">decode</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">)</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; dispatch execution to different parts of code based on the value of the expression</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">switch</font><font color="#000000">(</font><b><font color="#d35400">IrReceiver</font></b><font color="#434f54">.</font><b><font color="#d35400">decodedIRData</font></b><font color="#434f54">.</font><font color="#000000">command</font><font color="#000000">)</font><font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; if press the power button</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">case</font> <font color="#000000">0x45</font><font color="#434f54">:</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; if the value fan is 0</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">fan</font> <font color="#434f54">==</font> <font color="#000000">0</font><font color="#000000">)</font><font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; turn the fan on</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">trans</font><font color="#434f54">,</font><font color="#000000">fanspeed</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; set the value to 1</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">fan</font> <font color="#434f54">=</font> <font color="#000000">1</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; if not equals to 0</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">else</font> <font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; turn the fan off</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">trans</font><font color="#434f54">,</font><font color="#000000">0</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; set the value equals 0</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">fan</font> <font color="#434f54">=</font> <font color="#000000">0</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font> &nbsp;
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">break</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; if press the up button</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">case</font> <font color="#000000">0x09</font><font color="#434f54">:</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; if the fan is on</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">fan</font> <font color="#434f54">==</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; increase the fan speed</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">trans</font><font color="#434f54">,</font><font color="#000000">fanspeed</font><font color="#434f54">*</font><font color="#000000">2</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">fan</font> <font color="#434f54">=</font> <font color="#000000">1</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">break</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; if press the down button</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">case</font> <font color="#000000">0x07</font><font color="#434f54">:</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; if the fan is on</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">if</font> <font color="#000000">(</font><font color="#000000">fan</font> <font color="#434f54">==</font> <font color="#000000">1</font><font color="#000000">)</font><font color="#000000">{</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#434f54">&#47;&#47; decrease the fan speed</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#d35400">analogWrite</font><font color="#000000">(</font><font color="#000000">trans</font><font color="#434f54">,</font><font color="#000000">fanspeed</font><font color="#434f54">&#47;</font><font color="#000000">2</font><font color="#000000">)</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">fan</font> <font color="#434f54">=</font> <font color="#000000">1</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5e6d03">break</font><font color="#000000">;</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#d35400">IrReceiver</font></b><font color="#434f54">.</font><font color="#d35400">resume</font><font color="#000000">(</font><font color="#000000">)</font><font color="#000000">;</font> <font color="#434f54">&#47;&#47; Enable receiving of the next value &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+                 &nbsp;&nbsp;&nbsp;<font color="#000000">}</font>
+                <font color="#000000">}</font>
+                
+                </pre>
+        </div>
+         
+    </body>
+    
+</html>
